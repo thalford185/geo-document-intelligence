@@ -1,0 +1,9 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_pre_production_platform:
+    uses: ./.github/workflows/build-platform.yml
+    with:
+      environment: pre-production
