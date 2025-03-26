@@ -1,0 +1,16 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.11.1"
+      - run: terraform fmt -check
+        working-directory: platform/terraform/environments/${{inputs.environment}}
