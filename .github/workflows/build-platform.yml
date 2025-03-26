@@ -5,7 +5,10 @@ on:
         type: string
         required: true
 jobs:
-  deploy:
+  build:
+    defaults:
+      run:
+        working-directory: platform/terraform
     runs-on: ubuntu-latest
     steps:
       - uses: "actions/checkout@v4"
