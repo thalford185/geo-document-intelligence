@@ -1,0 +1,9 @@
+on:
+  pull_request:
+    paths:
+      - platform/**
+jobs:
+  build_pre_production_platform_infrastructure:
+    uses: ./.github/workflows/build-platform-infrastructure.yml
+    with:
+      environment: pre-production

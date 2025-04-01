@@ -1,0 +1,16 @@
+on:
+  pull_request:
+    paths:
+      - application/ai/**
+jobs:
+
+  build_pre_production_application_ai:
+    uses: ./.github/workflows/build-application-ai.yml
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      gcp_region: europe-west4
+      gcp_project: geo-document-intelligence-pre
+      gcp_service_account_email: app-deployer@geo-document-intelligence-pre.iam.gserviceaccount.com
+      gcp_workload_identity_provider_id: projects/505462349330/locations/global/workloadIdentityPools/ci-cd/providers/ci-cd-github-actions

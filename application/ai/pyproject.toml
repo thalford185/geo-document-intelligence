@@ -1,0 +1,28 @@
+[project]
+requires-python = ">=3.12"
+name = "ai"
+dynamic = ["dependencies", "optional-dependencies"]
+version = "0"  # monorepo packages are not versioned
+
+[tool.setuptools]
+packages = ["geo_document_intelligence", "entrypoints"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies.dev = { file = ["dev-requirements.txt"] }
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint]
+ignore = ".venv"
+generated-members = ["cv2"]  # C extensions
+fail-on=["F", "E", "W"]
+exit-zero=true
+
+[tool.pyright]
+type-checking-mode = "standard"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

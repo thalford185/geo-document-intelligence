@@ -13,14 +13,17 @@ on:
 
 jobs:
   deploy:
+    defaults:
+      run:
+        working-directory: application/terraform/environments/${{inputs.environment}}
     runs-on: ubuntu-latest
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: read
+      id-token: write
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
 
-      - uses: "google-github-actions/auth@v2"
+      - uses: google-github-actions/auth@v2
         with:
           service_account: ${{inputs.gcp_service_account_email}}
           workload_identity_provider: ${{inputs.gcp_workload_identity_provider_id}}
@@ -30,10 +33,7 @@ jobs:
           terraform_version: "1.11.1"
 
       - run: terraform init
-        working-directory: platform/terraform/environments/${{inputs.environment}}
 
       - run: terraform plan -out=tfplan
-        working-directory: platform/terraform/environments/${{inputs.environment}}
 
       - run: terraform apply tfplan
-        working-directory: platform/terraform/environments/${{inputs.environment}}
