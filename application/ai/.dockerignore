@@ -1,0 +1,27 @@
+# MacOS
+.DS_Store
+
+# Markdown
+*.md
+
+# VSCode
+.vscode
+
+# VirtualEnv
+venv
+.venv
+
+# Envfile
+**/.env
+**/.env.*
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Python
+*.in
+**/*.pt
+**/*.pyc
+**/__pycache__
+*.egg-info

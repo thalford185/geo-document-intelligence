@@ -1,0 +1,37 @@
+[importlinter]
+root_packages =
+    geo_document_intelligence
+    entrypoints
+    tests
+
+[importlinter:contract:do_not_import_from_entrypoints]
+name = Do not import from entrypoints
+type = forbidden
+source_modules =
+    geo_document_intelligence
+forbidden_modules =
+    entrypoints
+
+[importlinter:contract:adapters_and_services_are_independent]
+name = Adapters and services are independent
+type = independence
+modules =
+    geo_document_intelligence.ai.*.core.services
+    geo_document_intelligence.ai.*.adapters
+
+
+[importlinter:contract:adapters_tests_do_not_import_from_services]
+name = Adapter tests do not import from services
+type = forbidden
+source_modules =
+    tests.geo_document_intelligence.ai.*.adapters
+forbidden_modules =
+    geo_document_intelligence.ai.*.core.services
+
+[importlinter:contract:service_tests_do_not_import_from_adapters]
+name = Service tests do not import from adapters
+type = forbidden
+source_modules =
+    tests.geo_document_intelligence.ai.*.core.services
+forbidden_modules =
+    geo_document_intelligence.ai.*.adapters
