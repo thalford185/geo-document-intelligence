@@ -40,9 +40,13 @@ fastapi[standard]==0.115.12
 fastapi-cli[standard]==0.0.7
     # via fastapi
 filelock==3.18.0
-    # via torch
+    # via
+    #   huggingface-hub
+    #   torch
 fsspec==2025.3.0
-    # via torch
+    # via
+    #   huggingface-hub
+    #   torch
 google-api-core==2.24.2
     # via
     #   google-cloud-core
@@ -74,6 +78,8 @@ httptools==0.6.4
     # via uvicorn
 httpx==0.28.1
     # via fastapi
+huggingface-hub==0.30.1
+    # via -r requirements.in
 hydra-core==1.3.2
     # via sam2
 idna==3.10
@@ -110,7 +116,9 @@ omegaconf==2.3.0
 opencv-python-headless==4.11.0.86
     # via -r requirements.in
 packaging==24.2
-    # via hydra-core
+    # via
+    #   huggingface-hub
+    #   hydra-core
 pdf2image==1.17.0
     # via -r requirements.in
 pillow==11.1.0
@@ -145,12 +153,14 @@ python-multipart==0.0.20
     # via fastapi
 pyyaml==6.0.2
     # via
+    #   huggingface-hub
     #   omegaconf
     #   uvicorn
 requests==2.32.3
     # via
     #   google-api-core
     #   google-cloud-storage
+    #   huggingface-hub
 rich==14.0.0
     # via
     #   rich-toolkit
@@ -182,6 +192,7 @@ torchvision==0.21.0
     #   sam2
 tqdm==4.67.1
     # via
+    #   huggingface-hub
     #   iopath
     #   sam2
 typer==0.15.2
@@ -190,6 +201,7 @@ typing-extensions==4.13.0
     # via
     #   anyio
     #   fastapi
+    #   huggingface-hub
     #   iopath
     #   pydantic
     #   pydantic-core

@@ -8,7 +8,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: platform/terraform/environments/${{inputs.environment}}
+        working-directory: application/terraform/environments/${{inputs.environment}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
