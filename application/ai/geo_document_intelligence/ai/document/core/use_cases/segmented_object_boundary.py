@@ -1,3 +1,4 @@
+import logging
 from typing import TypeVar
 
 import cv2
@@ -29,6 +30,8 @@ from geo_document_intelligence.ai.document.core.ports.segmentation_ml import (
 )
 
 GeoT = TypeVar("GeoT", bound=shapely.Geometry)
+
+logger = logging.getLogger()
 
 
 def _denormalize_bounding_box(
@@ -217,6 +220,7 @@ class SegmentedObjectBoundaryUseCase(ObjectBoundaryUseCase):
         self._max_snap_distance = max_snap_distance
 
     async def predict(self, document_region: DocumentRegion) -> list[ObjectBoundary]:
+        logger.info("Retrieving document %s", document_region.document_id)
         try:
             raw_document = await self._raw_document_storage.get_by_document_id(
                 document_region.document_id
@@ -225,6 +229,7 @@ class SegmentedObjectBoundaryUseCase(ObjectBoundaryUseCase):
             raise SegmentedObjectBoundaryUseCaseDocumentNotFoundError(
                 f"Document {document_region.document_id} does not exist"
             ) from exc
+        logger.info("Retrieved document %s", document_region.document_id)
         if document_region.page_number > len(raw_document):
             raise SegmentedObjectBoundaryUseCasePageNotFoundError(
                 f"Page number {document_region.page_number}"
@@ -236,6 +241,11 @@ class SegmentedObjectBoundaryUseCase(ObjectBoundaryUseCase):
             document_region.normalized_bounding_box,
             page_dimension,
         )
+        logger.info(
+            "Segmenting document %s page %s",
+            document_region.document_id,
+            document_region.page_number,
+        )
         try:
             object_mask = await self._segmentation_ml.get_object_mask(
                 page,
@@ -243,6 +253,11 @@ class SegmentedObjectBoundaryUseCase(ObjectBoundaryUseCase):
             )
         except SegmentationMlError as exc:
             raise SegmentedObjectBoundaryUseCaseError("Segmentation error") from exc
+        logger.info(
+            "Segmented document %s page %s",
+            document_region.document_id,
+            document_region.page_number,
+        )
         boundaries = _convert_mask_to_boundaries(
             object_mask,
             self._max_simplification_displacement,
