@@ -15,7 +15,7 @@ jobs:
   deploy:
     defaults:
       run:
-        working-directory: platform/terraform/environments/${{inputs.environment}}
+        working-directory: application/terraform/environments/${{inputs.environment}}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,6 +31,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.11.1"
+
+      - run: echo 'ai_api_runner_service_account_id = "ai-api-runner"' > terraform.tfvars
 
       - run: terraform init
 
