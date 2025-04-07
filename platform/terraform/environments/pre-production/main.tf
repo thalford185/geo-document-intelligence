@@ -95,7 +95,7 @@ resource "google_project_iam_member" "app_deployer_project_iam_admin" {
 module "hitl_app" {
   source              = "../../modules/hitl-app"
   vercel_team_slug    = "tims-projects-6f5a2af0"
-  vercel_project_name = "geo-document-intelligence"
+  vercel_project_name = "geo-document-intelligence-hitl"
   vercel_environments = ["development", "preview"]
 }
 
