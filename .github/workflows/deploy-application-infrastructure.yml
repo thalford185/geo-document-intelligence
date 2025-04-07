@@ -10,6 +10,9 @@ on:
       gcp_workload_identity_provider_id:
         type: string
         required: true
+    secrets:
+      vercel_api_token:
+        required: true
 
 jobs:
   deploy:
@@ -20,6 +23,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
@@ -32,10 +38,12 @@ jobs:
         with:
           terraform_version: "1.11.1"
 
-      - run: echo 'ai_api_runner_service_account_id = "ai-api-runner"' > terraform.tfvars
-
       - run: terraform init
 
       - run: terraform plan -out=tfplan
+        env:
+          VERCEL_API_TOKEN: ${{secrets.vercel_api_token}}
 
       - run: terraform apply tfplan
+        env:
+          VERCEL_API_TOKEN: ${{secrets.vercel_api_token}}

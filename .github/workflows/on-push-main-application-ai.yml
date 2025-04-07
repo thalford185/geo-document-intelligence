@@ -26,6 +26,8 @@ jobs:
       environment: pre-production
       gcp_service_account_email: app-deployer@geo-document-intelligence-pre.iam.gserviceaccount.com
       gcp_workload_identity_provider_id: projects/505462349330/locations/global/workloadIdentityPools/ci-cd/providers/ci-cd-github-actions
+    secrets:
+      vercel_api_token: ${{secrets.VERCEL_API_TOKEN}}
 
   deploy_pre_production_application:
     uses: ./.github/workflows/deploy-application-ai.yml

@@ -1,7 +1,3 @@
-data "google_client_config" "current" {
-  provider = google
-}
-
 data "google_service_account" "runner" {
   account_id = var.runner_service_account_id
 }

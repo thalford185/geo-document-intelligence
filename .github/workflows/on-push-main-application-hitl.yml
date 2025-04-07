@@ -1,0 +1,24 @@
+on:
+  push:
+    paths:
+      - application/hitl/**
+    branches:
+      - main
+jobs:
+  build_pre_production_application_infrastructure:
+    uses: ./.github/workflows/build-application-infrastructure.yml
+    with:
+      environment: pre-production
+
+  deploy_pre_production_application_infrastructure:
+    needs: build_pre_production_application_infrastructure
+    uses: ./.github/workflows/deploy-application-infrastructure.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      environment: pre-production
+      gcp_service_account_email: app-deployer@geo-document-intelligence-pre.iam.gserviceaccount.com
+      gcp_workload_identity_provider_id: projects/505462349330/locations/global/workloadIdentityPools/ci-cd/providers/ci-cd-github-actions
+    secrets:
+      vercel_api_token: ${{secrets.VERCEL_API_TOKEN}}
