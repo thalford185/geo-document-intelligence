@@ -27,7 +27,7 @@ def make_raster_mask_of_square(
 def fixture_api_client(gcs_bucket: Mock, sam2_model: Mock) -> TestClient:
     app = FastAPI()
     app.include_router(raw_document.router)
-    raw_document.init(gcs_bucket, sam2_model)
+    raw_document.init(gcs_bucket, sam2_model, "cpu")
     return TestClient(app)
 
 

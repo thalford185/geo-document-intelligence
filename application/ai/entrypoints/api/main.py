@@ -24,8 +24,10 @@ logging.basicConfig(level=logging.INFO)
 
 gcs_client = GcsClient()
 gcs_bucket = gcs_client.bucket(os.environ["GCS_RAW_DOCUMENTS_BUCKET_NAME"])
+torch_device = os.environ["TORCH_DEVICE"]
+if torch_device not in ("cpu", "cuda"):
+    raise ValueError("TORCH_DEVICE must be either 'cpu' or 'cuda'")
 sam2_model = SAM2ImagePredictor.from_pretrained(
-    os.environ["SAM2_HUGGING_FACE_MODEL_ID"],
-    device="cpu",
+    os.environ["SAM2_HUGGING_FACE_MODEL_ID"], device=torch_device
 )
-raw_document.init(gcs_bucket, sam2_model)
+raw_document.init(gcs_bucket, sam2_model, torch_device)
