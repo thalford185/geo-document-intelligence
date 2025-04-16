@@ -1,6 +1,8 @@
 # Geo Document Intelligence Platform
 
 ## Infrastructure
+![infrastructure-platform drawio](https://github.com/user-attachments/assets/fa643b25-1c6c-4dea-b313-45eae8a1d3f3)
+
 
 ## Development
 
