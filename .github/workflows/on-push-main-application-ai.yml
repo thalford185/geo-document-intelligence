@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - application/ai/**
+      - .github/workflows/on-push-main-application-ai.yml
     branches:
       - main
 jobs:
@@ -44,5 +45,5 @@ jobs:
       gcp_runner_service_account_email: app-runner@geo-document-intelligence-pre.iam.gserviceaccount.com
       gcp_workload_identity_provider_id: projects/505462349330/locations/global/workloadIdentityPools/ci-cd/providers/ci-cd-github-actions
       gcs_raw_documents_bucket_name: geo-document-intelligence-pre
-      cloudrun_min_instances: 0
+      cloudrun_min_instances: 1
       cloudrun_max_instances: 1
