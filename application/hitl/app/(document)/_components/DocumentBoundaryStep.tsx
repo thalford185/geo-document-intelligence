@@ -139,8 +139,7 @@ export default function DocumentBoundaryEditor(
           <p>Step 2: Select boundary</p>
         </SideBarHeader>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Select the geographical boundary contained within the document region.
         </p>
         <div>
           <div

@@ -42,8 +42,8 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
           <p>Step 1: Select document region</p>
         </SideBarHeader>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Select the region of the document that contains the geographical
+          boundary.
         </p>
         <div className="border-dashed border-2 border-gray-400 rounded-md aspect-square">
           <div className="flex flex-row gap-4 justify-center items-center h-full">
