@@ -297,3 +297,5 @@ package-lock.json
 .vercel
 .env*.local
 .next
+
+*storybook.log
