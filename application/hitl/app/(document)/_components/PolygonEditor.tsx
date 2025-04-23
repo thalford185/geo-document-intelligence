@@ -12,13 +12,13 @@ import {
 import { getMouseEventPositionWithinSVGViewBox } from "@/app/(document)/_lib/svg";
 import { Dimension, Point } from "@/document/core/model";
 import { Check, CirclePlus, CircleSlash, WandSparkles } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 interface PolygonEditorProps {
   dimension: Dimension;
   className?: string;
   suggestedVertices: Point[];
-  updateSuggestedVertices: (vertices: Point[]) => void;
+  onUpdateSuggestedVertices: (vertices: Point[]) => void;
   onInput: (vertices: Point[]) => void;
   onCancel: () => void;
   onDone: (vertices: Point[]) => void;
@@ -30,120 +30,159 @@ export default function PolygonEditor(props: PolygonEditorProps) {
     className,
     onInput,
     suggestedVertices,
-    updateSuggestedVertices,
+    onUpdateSuggestedVertices: updateSuggestedVertices,
     onCancel,
     onDone,
   } = props;
-  const [vertices, setVertices] = useState<Point[]>([]);
+  const [inputVertices, setInputVertices] = useState<Point[]>([]);
+  const acceptNextButtonDescriptionId = useId();
+  const acceptAllButtonDescriptionId = useId();
+  const cancelButtonDescriptionId = useId();
+  const doneButtonDescriptionId = useId();
   return (
-    <div className="relative">
+    <div aria-label="polygonEditor" className="relative">
       <svg
+        role="img"
+        aria-label="PolygonEditorViewer"
         cursor="crosshair"
         viewBox={`0 0 ${dimension.width} ${dimension.height}`}
         className={`${className || ""}`}
         onClick={(e) => {
           const updatedVertices = [
-            ...vertices,
+            ...inputVertices,
             getMouseEventPositionWithinSVGViewBox(e),
           ];
-          setVertices(updatedVertices);
+          setInputVertices(updatedVertices);
           onInput(updatedVertices);
         }}
       >
-        <SvgPolygon vertices={vertices} />
+        <SvgPolygon data-testid="input-polygon" vertices={inputVertices} />
         {suggestedVertices.length > 0 && (
           <SvgPolygon
+            data-testid="suggested-polygon"
             vertices={suggestedVertices}
             color="fuchsia"
             filled={false}
-            strokeDash={[2, 2]}
+            dashed={true}
           />
         )}
       </svg>
       <div className="absolute top-8 -left-32 p-8">
-        <div className="bg-white shadow-sm flex flex-col gap-4 p-4">
+        <menu
+          role="menu"
+          aria-label="polygonEditorMenu"
+          className="bg-white shadow-sm flex flex-col gap-4 p-4"
+        >
           <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={
-                    suggestedVertices.length < 2 || vertices.length === 0
-                  }
-                  onClick={() => {
-                    if (suggestedVertices.length < 2) {
-                      throw Error(
-                        "Cannot accept next from zero-length suggestion"
-                      );
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={
+                      suggestedVertices.length < 2 || inputVertices.length === 0
                     }
-                    setVertices([...vertices, suggestedVertices[1]]);
-                    updateSuggestedVertices(suggestedVertices.slice(1));
-                  }}
-                >
-                  <CirclePlus />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Accept the next suggested vertex</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  disabled={suggestedVertices.length === 0}
-                  onClick={() => {
-                    if (suggestedVertices.length === 0) {
-                      throw Error("Cannot accept all from empty suggestion");
+                    onClick={() => {
+                      if (suggestedVertices.length < 2) {
+                        throw Error(
+                          "Cannot accept next from zero-length suggestion"
+                        );
+                      }
+                      setInputVertices([
+                        ...inputVertices,
+                        suggestedVertices[1],
+                      ]);
+                      updateSuggestedVertices(suggestedVertices.slice(1));
+                    }}
+                    aria-label="acceptNext"
+                    aria-describedby={acceptNextButtonDescriptionId}
+                  >
+                    <CirclePlus aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={acceptNextButtonDescriptionId}>
+                    Accept the next suggested vertex
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    disabled={suggestedVertices.length === 0}
+                    onClick={() => {
+                      if (suggestedVertices.length === 0) {
+                        throw Error("Cannot accept all from empty suggestion");
+                      }
+                      setInputVertices([
+                        ...inputVertices,
+                        ...suggestedVertices,
+                      ]);
+                      updateSuggestedVertices([]);
+                    }}
+                    aria-label="acceptAll"
+                    aria-describedby={acceptAllButtonDescriptionId}
+                  >
+                    <WandSparkles aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={acceptAllButtonDescriptionId}>
+                    Accept all suggested vertices
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+            <li role="presentation">
+              <Separator orientation="vertical" />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      setInputVertices([]);
+                      onCancel();
+                    }}
+                    aria-label="cancel"
+                    aria-describedby={cancelButtonDescriptionId}
+                  >
+                    <CircleSlash aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={cancelButtonDescriptionId}>Cancel polygon selection</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="default"
+                    size="icon"
+                    disabled={inputVertices.length === 0}
+                    onClick={() =>
+                      inputVertices.length !== 0 && onDone(inputVertices)
                     }
-                    setVertices([...vertices, ...suggestedVertices]);
-                    updateSuggestedVertices([]);
-                  }}
-                >
-                  <WandSparkles />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Accept all suggested vertices</p>
-              </TooltipContent>
-            </Tooltip>
-            <Separator orientation="vertical" />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => {
-                    setVertices([]);
-                    onCancel();
-                  }}
-                >
-                  <CircleSlash />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Cancel polygon selection</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="default"
-                  size="icon"
-                  disabled={vertices.length === 0}
-                  onClick={() => vertices.length !== 0 && onDone(vertices)}
-                >
-                  <Check />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Confirm polygon selection</p>
-              </TooltipContent>
-            </Tooltip>
+                    aria-label="done"
+                    aria-describedby={doneButtonDescriptionId}
+                  >
+                    <Check aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={doneButtonDescriptionId}>Confirm polygon selection</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
           </TooltipProvider>
-        </div>
+        </menu>
       </div>
     </div>
   );

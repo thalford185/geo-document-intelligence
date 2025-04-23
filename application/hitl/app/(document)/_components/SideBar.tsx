@@ -31,11 +31,11 @@ interface SideBarProps {
   children: React.ReactNode;
   className?: string;
 }
-export function SideBar(props: SideBarProps) {
+export default function SideBar(props: SideBarProps) {
   const { children, className } = props;
   return (
     <div
-      className={`flex flex-col gap-4 p-8 border-r-1 h-full w-md ${className || ""}`}
+      className={`bg-white flex flex-col gap-4 p-8 border-r-1 h-full w-md ${className || ""}`}
     >
       {children}
     </div>

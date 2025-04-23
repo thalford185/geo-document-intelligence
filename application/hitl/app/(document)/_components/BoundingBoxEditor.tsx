@@ -11,7 +11,7 @@ import {
 import { getMouseEventPositionWithinSVGViewBox } from "@/app/(document)/_lib/svg";
 import { BoundingBox, Dimension, Point } from "@/document/core/model";
 import { Check, CircleSlash } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 interface DragSelect {
   start: Point;
@@ -41,9 +41,13 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
   const dragSelectBoundingBox = dragSelect
     ? getDragSelectBounds(dragSelect)
     : null;
+  const cancelButtonDescriptionId = useId();
+  const doneButtonDescriptionId = useId();
   return (
-    <div className="relative">
+    <div className="relative" aria-label="boundingBoxEditor">
       <svg
+        role="img"
+        aria-label="boundingBoxEditorViewer"
         cursor="crosshair"
         className={`${className || ""}`}
         viewBox={`0 0 ${dimension.width} ${dimension.height}`}
@@ -78,46 +82,65 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
             className="fill-none stroke-blue-950"
             strokeDasharray="2,2"
             strokeWidth={0.5}
+            data-testid="drag-select"
           />
         )}
       </svg>
       <div className="absolute top-8 -left-32 p-8">
-        <div className="bg-white shadow-sm flex flex-col gap-4 p-4">
+        <menu
+          role="menu"
+          aria-label="boundingBoxEditorMenu"
+          className="bg-white shadow-sm flex flex-col gap-4 p-4"
+        >
           <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => {
-                    setValue(null);
-                    onCancel();
-                  }}
-                >
-                  <CircleSlash />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Cancel bounding box selection</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="default"
-                  size="icon"
-                  disabled={value === null && dragSelect === null}
-                  onClick={() => value !== null && onDone(value)}
-                >
-                  <Check />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Confirm bounding box selection</p>
-              </TooltipContent>
-            </Tooltip>
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    role="menuitem"
+                    aria-label="cancel"
+                    aria-describedby={cancelButtonDescriptionId}
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      setValue(null);
+                      onCancel();
+                    }}
+                  >
+                    <CircleSlash aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={cancelButtonDescriptionId}>
+                    Cancel bounding box selection
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    role="menuitem"
+                    aria-label="done"
+                    aria-describedby={doneButtonDescriptionId}
+                    variant="default"
+                    size="icon"
+                    disabled={value === null && dragSelect === null}
+                    onClick={() => value !== null && onDone(value)}
+                  >
+                    <Check aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p id={doneButtonDescriptionId}>
+                    Confirm bounding box selection
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
           </TooltipProvider>
-        </div>
+        </menu>
       </div>
     </div>
   );

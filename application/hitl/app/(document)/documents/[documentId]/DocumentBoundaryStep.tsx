@@ -2,8 +2,7 @@
 
 import PdfViewer from "@/app/(document)/_components/PdfViewer";
 import PolygonEditor from "@/app/(document)/_components/PolygonEditor";
-import {
-  SideBar,
+import SideBar, {
   SideBarActions,
   SideBarHeader,
 } from "@/app/(document)/_components/SideBar";
@@ -65,15 +64,13 @@ async function getBoundaryCompletion(
 }
 
 interface NotImplementedConfirmDialogProps {
-  disabled?: boolean;
+  children: React.ReactNode;
 }
 function NotImplementedConfirmDialog(props: NotImplementedConfirmDialogProps) {
-  const { disabled } = props;
+  const { children } = props;
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button disabled={disabled || false}>Confirm</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Not implemented</DialogTitle>
@@ -136,51 +133,44 @@ export default function DocumentBoundaryEditor(
     <div className="flex flex-row h-screen">
       <SideBar>
         <SideBarHeader>
-          <p>Step 2: Select boundary</p>
+          <h1>Step 2: Select boundary</h1>
         </SideBarHeader>
         <p>
           Select the geographical boundary contained within the document region.
         </p>
         <div>
-          <div
-            className="border-dashed border-2 border-gray-400 rounded-md aspect-square"
-            onClick={() => {
-              if (vertices.length === 0) {
-                setIsEditing(true);
-              } else {
-                setVertices([]);
-                setIsEditing(false);
-              }
-            }}
-          >
-            <div className="flex flex-row gap-4 justify-center items-center h-full">
-              {vertices.length == 0 ? (
-                isEditing ? (
-                  <>
-                    <p className="font-bold select-none">
-                      Click in the selected region to add vertices
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <SquareMousePointer />
-                    <p className="font-bold select-none">Select boundary</p>
-                  </>
-                )
-              ) : (
-                <>
-                  <Trash />
-                  <p className="font-bold select-none">Clear boundary</p>
-                </>
-              )}
-            </div>
+          <div className="border-dashed border-2 border-gray-400 rounded-md aspect-square">
+            <Button
+              variant="ghost"
+              className="w-full h-full font-bold"
+              size="lg"
+              hidden={vertices.length !== 0}
+              disabled={isEditing}
+              onClick={() => setIsEditing(true)}
+            >
+              <SquareMousePointer aria-hidden />
+              Select boundary
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full h-full font-bold"
+              size="lg"
+              hidden={vertices.length === 0}
+              disabled={isEditing}
+              onClick={() => setVertices([])}
+            >
+              <Trash aria-hidden />
+              Clear boundary
+            </Button>
           </div>
         </div>
         <SideBarActions>
-          <Button asChild>
+          <Button variant="outline" asChild>
             <Link href={backUrl}>Back</Link>
           </Button>
-          <NotImplementedConfirmDialog disabled={vertices.length === 0} />
+          <NotImplementedConfirmDialog>
+            <Button disabled={vertices.length === 0}>Confirm</Button>
+          </NotImplementedConfirmDialog>
         </SideBarActions>
       </SideBar>
       <PdfViewer
@@ -213,7 +203,7 @@ export default function DocumentBoundaryEditor(
                       normalizePolygon(workingVerties, pdfPageDimension)
                     );
                   }}
-                  updateSuggestedVertices={(suggestedVertices) =>
+                  onUpdateSuggestedVertices={(suggestedVertices) =>
                     setNormalizedSuggestedVertices(
                       normalizePolygon(suggestedVertices, pdfPageDimension)
                     )

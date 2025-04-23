@@ -18,7 +18,7 @@ export default async function DocumentsListing() {
   const docs = await documentUseCase.getAll();
   return (
     <div className="max-w-2xl mx-auto p-8 flex flex-col gap-4">
-      <p className="text-xl font-bold">Documents</p>
+      <h1 className="text-xl font-bold">Documents</h1>
       <Table>
         <TableCaption>A read-only list of available documents</TableCaption>
         <TableHeader>

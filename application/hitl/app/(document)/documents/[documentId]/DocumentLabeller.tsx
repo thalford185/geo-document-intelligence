@@ -1,16 +1,15 @@
 "use client";
 
-import DocumentBoundaryStep from "@/app/(document)/_components/DocumentBoundaryStep";
-import DocumentRegionStep from "@/app/(document)/_components/DocumentRegionStep";
 import DocumentSkeleton from "@/app/(document)/_components/DocumentSkeleton";
-import {
-  SideBar,
+import SideBar, {
   SideBarActions,
   SideBarHeader,
 } from "@/app/(document)/_components/SideBar";
 import { Skeleton } from "@/app/(document)/_components/ui/skeleton";
 import { usePdfDocument } from "@/app/(document)/_hooks/pdf";
 import { parseZodJSONString } from "@/app/(document)/_lib/zod";
+import DocumentBoundaryStep from "@/app/(document)/documents/[documentId]/DocumentBoundaryStep";
+import DocumentRegionStep from "@/app/(document)/documents/[documentId]/DocumentRegionStep";
 import { DocumentRegion } from "@/document/core/model";
 import { usePathname, useSearchParams } from "next/navigation";
 import { z } from "zod";
@@ -21,7 +20,7 @@ interface SideBarSkeletonProps {
 function SideBarSkeleton(props: SideBarSkeletonProps) {
   const { className } = props;
   return (
-    <SideBar className={className}>
+    <SideBar aria-busy className={className}>
       <SideBarHeader>
         <Skeleton className="h-8 rounded-xl"></Skeleton>
       </SideBarHeader>

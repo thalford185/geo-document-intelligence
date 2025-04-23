@@ -2,8 +2,7 @@
 
 import BoundingBoxEditor from "@/app/(document)/_components/BoundingBoxEditor";
 import PdfViewer from "@/app/(document)/_components/PdfViewer";
-import {
-  SideBar,
+import SideBar, {
   SideBarActions,
   SideBarHeader,
 } from "@/app/(document)/_components/SideBar";
@@ -39,40 +38,35 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
     <div className="flex flex-row h-screen">
       <SideBar>
         <SideBarHeader>
-          <p>Step 1: Select document region</p>
+          <h1>Step 1: Select document region</h1>
         </SideBarHeader>
         <p>
           Select the region of the document that contains the geographical
           boundary.
         </p>
         <div className="border-dashed border-2 border-gray-400 rounded-md aspect-square">
-          <div className="flex flex-row gap-4 justify-center items-center h-full">
-            {isEditing ? (
-              <p className="font-bold text-sm justify select-none p-8">
-                Drag select the boundary region of the document
-              </p>
-            ) : value === null ? (
-              <Button
-                variant="ghost"
-                className="w-full h-full"
-                size="lg"
-                onClick={() => setIsEditing(true)}
-              >
-                <SquareMousePointer />
-                <p className="font-bold select-none">Select document region</p>
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                className="w-full h-full"
-                size="lg"
-                onClick={() => setValue(null)}
-              >
-                <Trash />
-                <p className="font-bold select-none">Clear document region</p>
-              </Button>
-            )}
-          </div>
+          <Button
+            variant="ghost"
+            className="w-full h-full font-bold"
+            size="lg"
+            hidden={value !== null}
+            disabled={isEditing}
+            onClick={() => setIsEditing(true)}
+          >
+            <SquareMousePointer aria-hidden />
+            Select document region
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full h-full"
+            size="lg"
+            hidden={value === null}
+            disabled={isEditing}
+            onClick={() => setValue(null)}
+          >
+            <Trash aria-hidden />
+            Clear document region
+          </Button>
         </div>
         <SideBarActions>
           <Link
@@ -86,6 +80,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
               buttonVariants({ variant: "default" }),
               value === null && "pointer-events-none opacity-50"
             )}
+            aria-disabled={value === null}
             href={doneUrl(
               value === null
                 ? null
@@ -131,6 +126,8 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
           if (value?.boundingBox !== undefined) {
             return (
               <svg
+                role="img"
+                aria-label="boundingBox"
                 viewBox={`0 0 ${pdfPageDimension.width} ${pdfPageDimension.height}`}
               >
                 <SvgBoundingBox
