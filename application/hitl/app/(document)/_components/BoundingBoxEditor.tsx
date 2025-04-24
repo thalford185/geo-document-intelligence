@@ -11,7 +11,7 @@ import {
 import { getMouseEventPositionWithinSVGViewBox } from "@/app/(document)/_lib/svg";
 import { BoundingBox, Dimension, Point } from "@/document/core/model";
 import { Check, CircleSlash } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 
 interface DragSelect {
   start: Point;
@@ -41,10 +41,8 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
   const dragSelectBoundingBox = dragSelect
     ? getDragSelectBounds(dragSelect)
     : null;
-  const cancelButtonDescriptionId = useId();
-  const doneButtonDescriptionId = useId();
   return (
-    <div className="relative" aria-label="boundingBoxEditor">
+    <div className="relative" role="presentation">
       <svg
         role="img"
         aria-label="boundingBoxEditorViewer"
@@ -86,20 +84,18 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
           />
         )}
       </svg>
-      <div className="absolute top-8 -left-32 p-8">
-        <menu
-          role="menu"
-          aria-label="boundingBoxEditorMenu"
-          className="bg-white shadow-sm flex flex-col gap-4 p-4"
-        >
-          <TooltipProvider>
+      <div className="absolute top-8 -left-16">
+        <TooltipProvider>
+          <ul
+            role="menubar"
+            className="flex flex-col gap-2 bg-white shadow-sm p-2"
+          >
             <li role="presentation">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     role="menuitem"
                     aria-label="cancel"
-                    aria-describedby={cancelButtonDescriptionId}
                     variant="outline"
                     size="icon"
                     onClick={() => {
@@ -111,9 +107,7 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={cancelButtonDescriptionId}>
-                    Cancel bounding box selection
-                  </p>
+                  <p>Cancel bounding box selection</p>
                 </TooltipContent>
               </Tooltip>
             </li>
@@ -123,7 +117,6 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
                   <Button
                     role="menuitem"
                     aria-label="done"
-                    aria-describedby={doneButtonDescriptionId}
                     variant="default"
                     size="icon"
                     disabled={value === null && dragSelect === null}
@@ -133,14 +126,12 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={doneButtonDescriptionId}>
-                    Confirm bounding box selection
-                  </p>
+                  <p>Confirm bounding box selection</p>
                 </TooltipContent>
               </Tooltip>
             </li>
-          </TooltipProvider>
-        </menu>
+          </ul>
+        </TooltipProvider>
       </div>
     </div>
   );

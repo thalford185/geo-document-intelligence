@@ -12,7 +12,7 @@ import {
 import { getMouseEventPositionWithinSVGViewBox } from "@/app/(document)/_lib/svg";
 import { Dimension, Point } from "@/document/core/model";
 import { Check, CirclePlus, CircleSlash, WandSparkles } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 
 interface PolygonEditorProps {
   dimension: Dimension;
@@ -35,12 +35,8 @@ export default function PolygonEditor(props: PolygonEditorProps) {
     onDone,
   } = props;
   const [inputVertices, setInputVertices] = useState<Point[]>([]);
-  const acceptNextButtonDescriptionId = useId();
-  const acceptAllButtonDescriptionId = useId();
-  const cancelButtonDescriptionId = useId();
-  const doneButtonDescriptionId = useId();
   return (
-    <div aria-label="polygonEditor" className="relative">
+    <div className="relative">
       <svg
         role="img"
         aria-label="PolygonEditorViewer"
@@ -67,14 +63,13 @@ export default function PolygonEditor(props: PolygonEditorProps) {
           />
         )}
       </svg>
-      <div className="absolute top-8 -left-32 p-8">
-        <menu
-          role="menu"
-          aria-label="polygonEditorMenu"
-          className="bg-white shadow-sm flex flex-col gap-4 p-4"
-        >
-          <TooltipProvider>
-            <li role="presentation">
+      <div className="absolute top-8 -left-16">
+        <TooltipProvider>
+          <ul
+            role="menubar"
+            className="flex flex-col gap-2 bg-white shadow-sm p-2"
+          >
+            <li role="none">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -96,19 +91,17 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                       updateSuggestedVertices(suggestedVertices.slice(1));
                     }}
                     aria-label="acceptNext"
-                    aria-describedby={acceptNextButtonDescriptionId}
+                    role="menuitem"
                   >
                     <CirclePlus aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={acceptNextButtonDescriptionId}>
-                    Accept the next suggested vertex
-                  </p>
+                  <p>Accept the next suggested vertex</p>
                 </TooltipContent>
               </Tooltip>
             </li>
-            <li role="presentation">
+            <li role="none">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -126,20 +119,20 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                       updateSuggestedVertices([]);
                     }}
                     aria-label="acceptAll"
-                    aria-describedby={acceptAllButtonDescriptionId}
+                    role="menuitem"
                   >
                     <WandSparkles aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={acceptAllButtonDescriptionId}>
-                    Accept all suggested vertices
-                  </p>
+                  <p>Accept all suggested vertices</p>
                 </TooltipContent>
               </Tooltip>
             </li>
-            <li role="presentation">
+            <li role="none">
               <Separator orientation="vertical" />
+            </li>
+            <li role="none">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -150,17 +143,17 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                       onCancel();
                     }}
                     aria-label="cancel"
-                    aria-describedby={cancelButtonDescriptionId}
+                    role="menuitem"
                   >
                     <CircleSlash aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={cancelButtonDescriptionId}>Cancel polygon selection</p>
+                  <p>Cancel polygon selection</p>
                 </TooltipContent>
               </Tooltip>
             </li>
-            <li role="presentation">
+            <li role="none">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -171,18 +164,18 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                       inputVertices.length !== 0 && onDone(inputVertices)
                     }
                     aria-label="done"
-                    aria-describedby={doneButtonDescriptionId}
+                    role="menuitem"
                   >
                     <Check aria-hidden />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p id={doneButtonDescriptionId}>Confirm polygon selection</p>
+                  <p>Confirm polygon selection</p>
                 </TooltipContent>
               </Tooltip>
             </li>
-          </TooltipProvider>
-        </menu>
+          </ul>
+        </TooltipProvider>
       </div>
     </div>
   );

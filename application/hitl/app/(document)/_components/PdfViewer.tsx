@@ -80,7 +80,7 @@ export default function PdfViewer(props: PdfViewerProps) {
   } = props;
   const paginationIsEnabledOrDefault = paginationIsEnabled ?? true;
   return (
-    <div className={`bg-white ${className}`} aria-label="pdfViewer">
+    <div className={`bg-white ${className}`}>
       <div role="presentation" className="p-4 h-9/10">
         <div
           role="presentation"
@@ -116,7 +116,6 @@ export default function PdfViewer(props: PdfViewerProps) {
                       onUpdatePageNumber !== undefined &&
                       onUpdatePageNumber(paginationItemPageNumber)
                     }
-                    role="presentation"
                   >
                     <PaginationLink
                       isActive={itemIsActive}
@@ -124,8 +123,7 @@ export default function PdfViewer(props: PdfViewerProps) {
                         itemIsEnabled || "pointer-events-none",
                         paginationIsEnabledOrDefault ||
                           itemIsActive ||
-                          "text-gray-300",
-                        "select-none"
+                          "select-none"
                       )}
                     >
                       {paginationItemPageNumber}
