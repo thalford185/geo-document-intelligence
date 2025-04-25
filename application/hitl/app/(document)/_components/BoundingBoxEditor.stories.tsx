@@ -30,27 +30,25 @@ export const Primary: BoundingBoxEditorStory = {};
 export const WithValue: BoundingBoxEditorStory = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const svgElement = canvas.getByRole("img");
-    const svgElementBoundingClientRect = svgElement.getBoundingClientRect();
+    const viewer = canvas.getByRole("img", {
+      name: "boundingBoxEditorViewer",
+    });
+    const viewerBoundingClientRect = viewer.getBoundingClientRect();
     await userEvent.pointer([
       {
         keys: "[MouseLeft>]",
-        target: svgElement,
+        target: viewer,
         coords: {
-          x: svgElementBoundingClientRect.left + 64,
-          y: svgElementBoundingClientRect.top + 64,
+          x: viewerBoundingClientRect.left + 64,
+          y: viewerBoundingClientRect.top + 64,
         },
       },
       {
         coords: {
           x:
-            svgElementBoundingClientRect.left +
-            svgElementBoundingClientRect.width -
-            64,
+            viewerBoundingClientRect.left + viewerBoundingClientRect.width - 64,
           y:
-            svgElementBoundingClientRect.top +
-            svgElementBoundingClientRect.height -
-            64,
+            viewerBoundingClientRect.top + viewerBoundingClientRect.height - 64,
         },
       },
       {

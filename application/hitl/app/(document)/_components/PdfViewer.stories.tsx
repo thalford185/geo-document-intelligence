@@ -17,9 +17,11 @@ const meta: Meta<typeof PdfViewer> = {
       return { pdfDocument, pdfPage };
     },
   ],
-  render: (args, { loaded: { pdfDocument, pdfPage } }) => (
-    <PdfViewer {...args} pdfDocument={pdfDocument} pdfPage={pdfPage} />
-  ),
+  render: (args, { loaded: { pdfDocument, pdfPage } }) => {
+    args.pdfDocument = args.pdfDocument ?? pdfDocument;
+    args.pdfPage = args.pdfPage ?? pdfPage;
+    return <PdfViewer {...args} />;
+  },
   decorators: [
     (Story) => (
       <div style={{ width: "512px" }}>
@@ -33,19 +35,9 @@ type PdfViewerStory = StoryObj<typeof PdfViewer>;
 
 export const Primary: PdfViewerStory = {};
 
-export const PaginationDisabledWithOverlay: PdfViewerStory = {
+export const PaginationDisabled: PdfViewerStory = {
   args: {
     paginationIsEnabled: false,
-    renderOverlay: () => (
-      <div
-        style={{
-          backgroundColor: "#FF00FF",
-          width: "100%",
-          height: "100%",
-          opacity: 0.25,
-        }}
-      ></div>
-    ),
   },
 };
 

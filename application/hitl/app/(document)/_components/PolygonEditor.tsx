@@ -30,7 +30,7 @@ export default function PolygonEditor(props: PolygonEditorProps) {
     className,
     onInput,
     suggestedVertices,
-    onUpdateSuggestedVertices: updateSuggestedVertices,
+    onUpdateSuggestedVertices,
     onCancel,
     onDone,
   } = props;
@@ -39,7 +39,7 @@ export default function PolygonEditor(props: PolygonEditorProps) {
     <div className="relative">
       <svg
         role="img"
-        aria-label="PolygonEditorViewer"
+        aria-label="polygonEditorViewer"
         cursor="crosshair"
         viewBox={`0 0 ${dimension.width} ${dimension.height}`}
         className={`${className || ""}`}
@@ -88,7 +88,7 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                         ...inputVertices,
                         suggestedVertices[1],
                       ]);
-                      updateSuggestedVertices(suggestedVertices.slice(1));
+                      onUpdateSuggestedVertices(suggestedVertices.slice(1));
                     }}
                     aria-label="acceptNext"
                     role="menuitem"
@@ -116,7 +116,7 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                         ...inputVertices,
                         ...suggestedVertices,
                       ]);
-                      updateSuggestedVertices([]);
+                      onUpdateSuggestedVertices([]);
                     }}
                     aria-label="acceptAll"
                     role="menuitem"
