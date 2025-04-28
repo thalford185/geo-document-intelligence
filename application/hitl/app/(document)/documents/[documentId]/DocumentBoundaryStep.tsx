@@ -147,6 +147,7 @@ export default function DocumentBoundaryEditor(
               hidden={vertices.length !== 0}
               disabled={isEditing}
               onClick={() => setIsEditing(true)}
+              aria-label="selectBoundary"
             >
               <SquareMousePointer aria-hidden />
               Select boundary
@@ -158,6 +159,7 @@ export default function DocumentBoundaryEditor(
               hidden={vertices.length === 0}
               disabled={isEditing}
               onClick={() => setVertices([])}
+              aria-label="clearBoundary"
             >
               <Trash aria-hidden />
               Clear boundary
@@ -166,10 +168,14 @@ export default function DocumentBoundaryEditor(
         </div>
         <SideBarActions>
           <Button variant="outline" asChild>
-            <Link href={backUrl}>Back</Link>
+            <Link href={backUrl} aria-label="back">
+              Back
+            </Link>
           </Button>
           <NotImplementedConfirmDialog>
-            <Button disabled={vertices.length === 0}>Confirm</Button>
+            <Button aria-label="confirm" disabled={vertices.length === 0}>
+              Confirm
+            </Button>
           </NotImplementedConfirmDialog>
         </SideBarActions>
       </SideBar>

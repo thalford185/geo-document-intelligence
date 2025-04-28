@@ -298,4 +298,9 @@ package-lock.json
 .env*.local
 .next
 
+# Storybook
 *storybook.log
+
+# Playright
+**/playwright-report
+**/test-results

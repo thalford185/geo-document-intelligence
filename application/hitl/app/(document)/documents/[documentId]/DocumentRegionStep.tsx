@@ -52,6 +52,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
             hidden={value !== null}
             disabled={isEditing}
             onClick={() => setIsEditing(true)}
+            aria-label="selectDocumentRegion"
           >
             <SquareMousePointer aria-hidden />
             Select document region
@@ -63,6 +64,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
             hidden={value === null}
             disabled={isEditing}
             onClick={() => setValue(null)}
+            aria-label="clearDocumentRegion"
           >
             <Trash aria-hidden />
             Clear document region
@@ -72,6 +74,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
           <Link
             href={backUrl}
             className={buttonVariants({ variant: "outline" })}
+            aria-label="back"
           >
             Back
           </Link>
@@ -81,6 +84,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
               value === null && "pointer-events-none opacity-50"
             )}
             aria-disabled={value === null}
+            aria-label="next"
             href={doneUrl(
               value === null
                 ? null
