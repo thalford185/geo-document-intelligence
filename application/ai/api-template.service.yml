@@ -20,16 +20,13 @@ spec:
           - name: SAM2_HUGGING_FACE_MODEL_ID
             value: facebook/sam2-hiera-tiny
           - name: TORCH_DEVICE
-            value: cuda
+            value: cpu
           - name: GCS_RAW_DOCUMENTS_BUCKET_NAME
             value: "$GCS_RAW_DOCUMENTS_BUCKET_NAME"
         resources:
           limits:
-            cpu: '4'
-            memory: 16Gi
-            nvidia.com/gpu: "1"
-      nodeSelector:
-        run.googleapis.com/accelerator: nvidia-l4
+            cpu: '2'
+            memory: 8Gi
   traffic:
     - percent: 100
       latestRevision: true
