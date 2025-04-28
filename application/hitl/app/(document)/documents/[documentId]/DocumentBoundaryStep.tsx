@@ -8,6 +8,11 @@ import SideBar, {
 } from "@/app/(document)/_components/SideBar";
 import SvgBoundingBox from "@/app/(document)/_components/SvgBoundingBox";
 import SvgPolygon from "@/app/(document)/_components/SvgPolygon";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/app/(document)/_components/ui/alert";
 import { Button, buttonVariants } from "@/app/(document)/_components/ui/button";
 import {
   Dialog,
@@ -26,12 +31,14 @@ import {
   normalizePolygon,
 } from "@/app/(document)/_lib/geometry";
 import { getPdfPageDimensionInMm } from "@/app/(document)/_lib/pdf";
+import { cn } from "@/app/(document)/_lib/utils";
 import { DocumentRegion, PartialBoundary, Point } from "@/document/core/model";
 import axios from "axios";
-import { SquareMousePointer, Trash } from "lucide-react";
+import { AlertCircle, SquareMousePointer, Trash } from "lucide-react";
 import Link from "next/link";
 import { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 const partialBoundaryDto = z.object({
@@ -110,18 +117,27 @@ export default function DocumentBoundaryEditor(
   const [normalizedInputVertices, setNormalizedInputVertices] = useState<
     Point[]
   >([]);
+  const debouncedSetNormalizedInputVertices = useDebouncedCallback(
+    setNormalizedInputVertices,
+    5000,
+    { leading: true },
+  );
   const [normalizedSuggestedVertices, setNormalizedSuggestedVertices] =
     useState<Point[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isLoadingSuggestion, setIsLoadingSuggestion] =
+    useState<boolean>(false);
 
   useEffect(() => {
     let ignore = false;
     setNormalizedSuggestedVertices([]);
+    setIsLoadingSuggestion(true);
     getBoundaryCompletion(documentId, documentRegion, {
       normalizedVertices: normalizedInputVertices,
     }).then(({ normalizedVertices }) => {
       if (!ignore) {
         setNormalizedSuggestedVertices(normalizedVertices);
+        setIsLoadingSuggestion(false);
       }
     });
     return () => {
@@ -138,6 +154,14 @@ export default function DocumentBoundaryEditor(
         <p>
           Select the geographical boundary contained within the document region.
         </p>
+        <Alert variant="default">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Degraded suggestion performance</AlertTitle>
+          <AlertDescription>
+            I ran out of free GPU credits and boundary suggestion is currently
+            5x slower.
+          </AlertDescription>
+        </Alert>
         <div>
           <div className="border-dashed border-2 border-gray-400 rounded-md aspect-square">
             <Button
@@ -190,7 +214,12 @@ export default function DocumentBoundaryEditor(
             return (
               <>
                 <svg
-                  className="absolute top-0 z-10"
+                  className={cn(
+                    "absolute",
+                    "top-0",
+                    "z-10",
+                    isLoadingSuggestion && "animate-pulse",
+                  )}
                   viewBox={`0 0 ${pdfPageDimension.width} ${pdfPageDimension.height}`}
                 >
                   <SvgBoundingBox
@@ -204,9 +233,13 @@ export default function DocumentBoundaryEditor(
                 <PolygonEditor
                   className="absolute top-0 z-11"
                   dimension={getPdfPageDimensionInMm(pdfPage)}
-                  onInput={(workingVerties: Point[]) => {
-                    setNormalizedInputVertices(
-                      normalizePolygon(workingVerties, pdfPageDimension),
+                  onInput={(inputVertices: Point[]) => {
+                    // Do not update until a polygon has been input
+                    if (inputVertices.length == 1) {
+                      return;
+                    }
+                    debouncedSetNormalizedInputVertices(
+                      normalizePolygon(inputVertices, pdfPageDimension),
                     );
                   }}
                   onUpdateSuggestedVertices={(suggestedVertices) =>

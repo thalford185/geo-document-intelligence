@@ -22,6 +22,10 @@ const searchParamsSchema = z.object({
     .pipe(partialBoundaryDtoSchema),
 });
 
+export const config = {
+  maxDuration: 20, // Increase timeout to allow for slow AI whilst the project is in pre-production
+};
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ documentId: string }> },
