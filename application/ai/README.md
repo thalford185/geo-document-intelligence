@@ -9,14 +9,16 @@ Hexagonal Architecture encourages the creation of components called Adapters, wh
 The added complexity of this abstraction is intended to make it easier to test both Core and Adapter components in isolation. Furthermore the Core is unaffected by changes in the Infrastructure and in turn the Infrastructure is unaffected by changes to AI techniques in the Core.
 
 ## Automated Tests
-Run automated tests with `pytest`.
+Code changes are blocked from being integrated, via Pull Request, until all automated tests pass.
+
+Run automated tests locally with `pytest`.
 
 Adapters and Core Services can be unit tested independently by mocking their Port implementations. Entrypoints can be integration tested by instantiating Driving Adapters and Core Services with concrete implementations of their Ports. For determinism, tests should not call the network.
 
 Automated tests are frameworked with PyTest and make use of the Parameterize and Fixture features. Fixtures provide a reusable method for adding context to tests (e.g. Port implementation mocks) and Parameterize provides a method for running the same test on multiple named cases.
 
 ## Code Quality
-Code changes are blocked from being integrated until build checks pass. This trades-off some throughput for quality with the goal of maintaining developer efficiency as the application complexity or team size increases.
+Code changes are blocked from being integrated, via Pull Request, until build checks pass. This trades-off some throughput for quality with the goal of maintaining developer efficiency as the application complexity or team size increases.
 
 Type checking (PyRight) ensures the correctness of typing in order to catch simple but common mistakes before they reach production. Run type checks with `pyright`. The type checking mode is set to "standard" and not "strict" which means that not all of the code needs to be typed. This is to enable developers to work efficiently in cases where typing may not be practical (for example not supported by the library).
 
@@ -25,6 +27,7 @@ Code formatting checks (Black & ISort) makes code easier to read by the team (or
 Python Linting (PyLint) catches further common mistakes. Run linting with `pylint .`. Convention and refactoring messages do not cause the build to fail, so that the team can decide which should be resolved on a per PR basis.
 
 Import Linting checks enforce the independence of AI sections (Raw Document AI, Geo-spatial AI, etc) and the decoupling of the section's core and it's adapters. See Software Architecture for more information. Run import linting with `lint-imports`.
+
 ## Development
 ### System Requirements
 * See pyproject.toml for Python version
