@@ -29,7 +29,7 @@ function expectDisabledMenuItem(name: string) {
 }
 
 async function canBeCancelled(
-  Component: ComposedStoryFn<ReactRenderer, { onCancel?: () => void }>
+  Component: ComposedStoryFn<ReactRenderer, { onCancel?: () => void }>,
 ) {
   await clickEnabledMenuItem("cancel");
   expect(Component.args.onCancel).toHaveBeenCalled();
@@ -39,7 +39,7 @@ async function canBeConfirmed(
   Component: ComposedStoryFn<
     ReactRenderer,
     { onDone?: (vertices: Point[]) => void }
-  >
+  >,
 ) {
   await clickEnabledMenuItem("done");
   expect(Component.args.onDone).toHaveBeenCalled();
@@ -49,7 +49,7 @@ async function canAcceptAll(
   Component: ComposedStoryFn<
     ReactRenderer,
     { onUpdateSuggestedVertices?: (vertices: Point[]) => void }
-  >
+  >,
 ) {
   await clickEnabledMenuItem("acceptAll");
   expect(Component.args.onUpdateSuggestedVertices).toHaveBeenCalled();

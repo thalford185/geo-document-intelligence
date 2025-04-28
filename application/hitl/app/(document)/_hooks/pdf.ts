@@ -3,7 +3,7 @@ import "pdfjs-dist/webpack";
 import { useEffect, useState } from "react";
 
 export function usePdfDocument(
-  rawDocumentUrl: string
+  rawDocumentUrl: string,
 ): PDFDocumentProxy | undefined {
   const [pdfDocument, setPdfDocument] = useState<PDFDocumentProxy>();
 
@@ -26,7 +26,7 @@ export function usePdfDocument(
 
 export function usePdfDocumentPage(
   pdfDocument: PDFDocumentProxy,
-  pageNumber: number
+  pageNumber: number,
 ): PDFPageProxy | undefined {
   const [pdfPage, setPdfPage] = useState<PDFPageProxy>();
 

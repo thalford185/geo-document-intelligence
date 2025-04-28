@@ -7,11 +7,11 @@ import {
 export default interface RawDocumentAi {
   getBoundary(
     rawDocumentId: string,
-    documentRegion: DocumentRegion
+    documentRegion: DocumentRegion,
   ): Promise<Boundary | null>;
   completeBoundary(
     rawDocumentId: string,
     documentRegion: DocumentRegion,
-    partialBoundary: PartialBoundary
+    partialBoundary: PartialBoundary,
   ): Promise<PartialBoundary | null>;
 }

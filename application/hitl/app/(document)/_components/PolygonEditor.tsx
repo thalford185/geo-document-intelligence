@@ -81,7 +81,7 @@ export default function PolygonEditor(props: PolygonEditorProps) {
                     onClick={() => {
                       if (suggestedVertices.length < 2) {
                         throw Error(
-                          "Cannot accept next from zero-length suggestion"
+                          "Cannot accept next from zero-length suggestion",
                         );
                       }
                       setInputVertices([

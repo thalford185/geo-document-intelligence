@@ -10,7 +10,13 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript", "plugin:storybook/recommended"),
+  ...compat.extends(
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:storybook/recommended",
+    "plugin:prettier/recommended",
+  ),
+  { ignores: [".next/"] },
 ];
 
 export default eslintConfig;

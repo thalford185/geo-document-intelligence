@@ -28,7 +28,7 @@ export default function SvgPolygon(props: SvgPolygonProps) {
         points={serializeSvgPolygonPoints(vertices)}
         className={cn(
           (filled ?? true) ? colorFillClassName[colorOrDefault] : "fill-none",
-          colorStrokeClassName[colorOrDefault]
+          colorStrokeClassName[colorOrDefault],
         )}
         fillOpacity="0.1"
         strokeWidth="2"

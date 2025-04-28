@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 function convertFromDbToModel(
-  dbDocument: typeof documentsSchema.$inferSelect
+  dbDocument: typeof documentsSchema.$inferSelect,
 ): Document {
   return {
     id: dbDocument.id,
@@ -16,7 +16,7 @@ function convertFromDbToModel(
 
 export default class PostgresDocumentRepository implements DocumentRepository {
   constructor(
-    private db: NodePgDatabase<{ documents: typeof documentsSchema }>
+    private db: NodePgDatabase<{ documents: typeof documentsSchema }>,
   ) {}
   async getById(documentId: string): Promise<Document | null> {
     const dbDocument = await this.db.query.documents.findFirst({

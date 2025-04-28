@@ -81,7 +81,7 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
           <Link
             className={cn(
               buttonVariants({ variant: "default" }),
-              value === null && "pointer-events-none opacity-50"
+              value === null && "pointer-events-none opacity-50",
             )}
             aria-disabled={value === null}
             aria-label="next"
@@ -92,9 +92,9 @@ export default function DocumentRegionStep(props: DocumentRegionEditorProps) {
                     pageNumber: value.pageNumber,
                     normalizedBoundingBox: normalizeBoundingBox(
                       value.boundingBox,
-                      value.pageDimension
+                      value.pageDimension,
                     ),
-                  }
+                  },
             )}
           >
             Next

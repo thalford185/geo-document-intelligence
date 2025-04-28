@@ -83,14 +83,14 @@ export default function DocumentLabeller(props: DocumentLabellerProps) {
         backUrl="/documents"
         doneUrl={(documentRegion: DocumentRegion | null) => {
           const updatedSearchParams = new URLSearchParams(
-            searchParams.toString()
+            searchParams.toString(),
           );
           if (documentRegion) {
             const { pageNumber, normalizedBoundingBox } = documentRegion;
             updatedSearchParams.set("pageNumber", pageNumber.toString());
             updatedSearchParams.set(
               "normalizedBoundingBox",
-              JSON.stringify(normalizedBoundingBox)
+              JSON.stringify(normalizedBoundingBox),
             );
           }
           return `${pathname}?${updatedSearchParams}`;
@@ -99,7 +99,7 @@ export default function DocumentLabeller(props: DocumentLabellerProps) {
     );
   } else {
     const documentRegionStepUrlSearchParams = new URLSearchParams(
-      searchParams.toString()
+      searchParams.toString(),
     );
     documentRegionStepUrlSearchParams.delete("pageNumber");
     documentRegionStepUrlSearchParams.delete("normalizedBoundingBox");

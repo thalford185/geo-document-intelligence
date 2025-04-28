@@ -44,18 +44,18 @@ const milliPrecisionJsonReplacer = (key: string, val: unknown) =>
 async function getBoundaryCompletion(
   documentId: string,
   documentRegion: DocumentRegion,
-  partialBoundary: PartialBoundary
+  partialBoundary: PartialBoundary,
 ): Promise<PartialBoundary> {
   const response = await axios.get(`/api/documents/${documentId}/boundaries`, {
     params: {
       pageNumber: documentRegion.pageNumber,
       boundingBox: JSON.stringify(
         documentRegion.normalizedBoundingBox,
-        milliPrecisionJsonReplacer
+        milliPrecisionJsonReplacer,
       ),
       partialBoundary: JSON.stringify(
         partialBoundary.normalizedVertices,
-        milliPrecisionJsonReplacer
+        milliPrecisionJsonReplacer,
       ),
     },
   });
@@ -102,7 +102,7 @@ interface DocumentBoundaryEditorProps {
   backUrl: string;
 }
 export default function DocumentBoundaryEditor(
-  props: DocumentBoundaryEditorProps
+  props: DocumentBoundaryEditorProps,
 ) {
   const { documentId, pdfDocument, documentRegion, backUrl } = props;
   const pdfPage = usePdfDocumentPage(pdfDocument, documentRegion.pageNumber);
@@ -196,7 +196,7 @@ export default function DocumentBoundaryEditor(
                   <SvgBoundingBox
                     value={deNormalizeBoundingBox(
                       documentRegion.normalizedBoundingBox,
-                      pdfPageDimension
+                      pdfPageDimension,
                     )}
                     dimension={pdfPageDimension}
                   />
@@ -206,17 +206,17 @@ export default function DocumentBoundaryEditor(
                   dimension={getPdfPageDimensionInMm(pdfPage)}
                   onInput={(workingVerties: Point[]) => {
                     setNormalizedInputVertices(
-                      normalizePolygon(workingVerties, pdfPageDimension)
+                      normalizePolygon(workingVerties, pdfPageDimension),
                     );
                   }}
                   onUpdateSuggestedVertices={(suggestedVertices) =>
                     setNormalizedSuggestedVertices(
-                      normalizePolygon(suggestedVertices, pdfPageDimension)
+                      normalizePolygon(suggestedVertices, pdfPageDimension),
                     )
                   }
                   suggestedVertices={deNormalizePolygon(
                     normalizedSuggestedVertices,
-                    pdfPageDimension
+                    pdfPageDimension,
                   )}
                   onCancel={() => {
                     if (normalizedInputVertices.length !== 0) {
@@ -243,7 +243,7 @@ export default function DocumentBoundaryEditor(
                   <SvgBoundingBox
                     value={deNormalizeBoundingBox(
                       documentRegion.normalizedBoundingBox,
-                      pdfPageDimension
+                      pdfPageDimension,
                     )}
                     dimension={pdfPageDimension}
                   />

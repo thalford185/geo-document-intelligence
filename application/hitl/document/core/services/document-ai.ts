@@ -11,11 +11,13 @@ import RawDocumentStorage from "@/document/core/ports/driven/raw-document-storag
 import DocumentBoundaryUseCase from "../ports/driving/document-boundary-use-case";
 import DocumentUseCase from "../ports/driving/document-use-case";
 
-export default class DocumentAiService implements DocumentUseCase, DocumentBoundaryUseCase {
+export default class DocumentAiService
+  implements DocumentUseCase, DocumentBoundaryUseCase
+{
   constructor(
     private documentRepository: DocumentRepository,
     private rawDocumentAi: RawDocumentAi,
-    private rawDocumentStorage: RawDocumentStorage
+    private rawDocumentStorage: RawDocumentStorage,
   ) {}
   async get(id: string): Promise<Document | null> {
     const document = await this.documentRepository.getById(id);
@@ -41,7 +43,7 @@ export default class DocumentAiService implements DocumentUseCase, DocumentBound
   }
   async getBoundary(
     documentId: string,
-    documentRegion: DocumentRegion
+    documentRegion: DocumentRegion,
   ): Promise<Boundary | null> {
     const document = await this.documentRepository.getById(documentId);
     if (document === null) {
@@ -49,14 +51,14 @@ export default class DocumentAiService implements DocumentUseCase, DocumentBound
     }
     const boundary = await this.rawDocumentAi.getBoundary(
       document.rawDocumentId,
-      documentRegion
+      documentRegion,
     );
     return boundary;
   }
   async getBoundaryCompletion(
     documentId: string,
     documentRegion: DocumentRegion,
-    partialBoundary: PartialBoundary
+    partialBoundary: PartialBoundary,
   ): Promise<PartialBoundary | null> {
     const document = await this.documentRepository.getById(documentId);
     if (document === null) {
@@ -65,7 +67,7 @@ export default class DocumentAiService implements DocumentUseCase, DocumentBound
     const boundaryCompletion = await this.rawDocumentAi.completeBoundary(
       document.rawDocumentId,
       documentRegion,
-      partialBoundary
+      partialBoundary,
     );
     return boundaryCompletion;
   }

@@ -42,7 +42,7 @@ function PdfPage(props: PdfPageProps) {
         renderTask.cancel();
       };
     },
-    [pdfPage]
+    [pdfPage],
   );
 
   const pageDimensionInMm = getPdfPageDimensionInMm(pdfPage);
@@ -123,7 +123,7 @@ export default function PdfViewer(props: PdfViewerProps) {
                         itemIsEnabled || "pointer-events-none",
                         paginationIsEnabledOrDefault ||
                           itemIsActive ||
-                          "select-none"
+                          "select-none",
                       )}
                     >
                       {paginationItemPageNumber}
