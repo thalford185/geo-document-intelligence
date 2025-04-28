@@ -8,7 +8,6 @@ spec:
       annotations:
         autoscaling.knative.dev/minScale: "$CLOUDRUN_MIN_INSTANCES"
         autoscaling.knative.dev/maxScale: "$CLOUDRUN_MAX_INSTANCES"
-        run.googleapis.com/gpu-zonal-redundancy-disabled: "true"
     spec:
       serviceAccountName: "$GCP_SERVICE_ACCOUNT_EMAIL"
       containers:
