@@ -13,7 +13,7 @@ Permissions are granted to application Service Accounts through the principle of
 ### Development
 
 #### Code Quality
-Code changes are blocked from being integrated until build checks pass. This trades-off some throughput for quality with the goal of maintaining developer efficiency as the application complexity and team size increases.
+Code changes are blocked from being integrated, via Pull Request, until build checks pass
 
 Code formatting checks are enforced to make code easier to read by the team (or yourself in a weeks time). Run code formatting checks with `terraform fmt -check`. Automatic code formatting is well supported by editors and so friction should be minimal.
 
