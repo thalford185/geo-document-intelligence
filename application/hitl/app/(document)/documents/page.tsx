@@ -18,22 +18,22 @@ export default async function DocumentsListing() {
   const docs = await documentUseCase.getAll();
   return (
     <div className="max-w-2xl mx-auto p-8 flex flex-col gap-4">
-      <p className="text-xl font-bold">Documents</p>
-      <Table>
+      <h1 className="text-xl font-bold">Documents</h1>
+      <Table aria-label="documents">
         <TableCaption>A read-only list of available documents</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead aria-label="document-id">ID</TableHead>
+            <TableHead aria-label="document-name">Name</TableHead>
+            <TableHead aria-label="actions">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {docs.map((document) => (
-            <TableRow key={document.id}>
-              <TableCell>{document.id}</TableCell>
-              <TableCell>{document.name}</TableCell>
-              <TableCell>
+            <TableRow key={document.id} aria-label={document.name}>
+              <TableCell aria-label="document-id">{document.id}</TableCell>
+              <TableCell aria-label="document-name">{document.name}</TableCell>
+              <TableCell aria-label="actions">
                 <Link
                   href={`/documents/${document.id}`}
                   className={buttonVariants({ variant: "default" })}

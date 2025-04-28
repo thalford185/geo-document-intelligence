@@ -6,6 +6,7 @@ import {
   PaginationLink,
 } from "@/app/(document)/_components/ui/pagination";
 import { getPdfPageDimensionInMm } from "@/app/(document)/_lib/pdf";
+import { cn } from "@/app/(document)/_lib/utils";
 import { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist";
 import { useCallback } from "react";
 
@@ -41,7 +42,7 @@ function PdfPage(props: PdfPageProps) {
         renderTask.cancel();
       };
     },
-    [pdfPage]
+    [pdfPage],
   );
 
   const pageDimensionInMm = getPdfPageDimensionInMm(pdfPage);
@@ -54,13 +55,15 @@ function PdfPage(props: PdfPageProps) {
       width={unscaledViewport.width}
       height={unscaledViewport.height}
       ref={canvasRef}
+      role="img"
+      aria-label="pdfViewerPage"
     />
   );
 }
 
 interface PdfViewerProps {
   pdfDocument: PDFDocumentProxy;
-  paginationIsEnabled: boolean;
+  paginationIsEnabled?: boolean;
   pdfPage?: PDFPageProxy;
   onUpdatePageNumber?: (updatedPageNumber: number) => void;
   className?: string;
@@ -75,14 +78,18 @@ export default function PdfViewer(props: PdfViewerProps) {
     className,
     renderOverlay,
   } = props;
+  const paginationIsEnabledOrDefault = paginationIsEnabled ?? true;
   return (
-    <div className={`bg-gray-100 ${className}`}>
-      <div className="p-4 h-9/10">
-        <div className="relative mx-auto h-full max-w-fit">
+    <div className={`bg-white ${className}`}>
+      <div role="presentation" className="p-4 h-9/10">
+        <div
+          role="presentation"
+          className="relative mx-auto h-full max-w-fit shadow-md"
+        >
           {pdfPage ? (
             <>
               <PdfPage pdfPage={pdfPage} />
-              <div className="absolute top-0 w-full h-full">
+              <div role="presentation" className="absolute top-0 w-full h-full">
                 {renderOverlay(pdfPage)}
               </div>
             </>
@@ -91,29 +98,39 @@ export default function PdfViewer(props: PdfViewerProps) {
           )}
         </div>
       </div>
-      <div className="h-1/10">
-        <Pagination>
+      <div role="presentation" className="h-1/10">
+        <Pagination aria-label="pdfViewerPagination">
           <PaginationContent>
             {[...Array(pdfDocument.numPages).keys()]
               .map((i) => i + 1)
-              .map((paginationItemPageNumber) => (
-                <PaginationItem
-                  key={paginationItemPageNumber}
-                  onClick={() =>
-                    paginationIsEnabled &&
-                    onUpdatePageNumber !== undefined &&
-                    onUpdatePageNumber(paginationItemPageNumber)
-                  }
-                >
-                  <PaginationLink
-                    href="#"
-                    isActive={paginationItemPageNumber === pdfPage?.pageNumber}
-                    className={paginationIsEnabled ? "" : "pointer-events-none"}
+              .map((paginationItemPageNumber) => {
+                const itemIsActive =
+                  paginationItemPageNumber === pdfPage?.pageNumber;
+                const itemIsEnabled =
+                  !itemIsActive && paginationIsEnabledOrDefault;
+                return (
+                  <PaginationItem
+                    key={paginationItemPageNumber}
+                    onClick={() =>
+                      itemIsEnabled &&
+                      onUpdatePageNumber !== undefined &&
+                      onUpdatePageNumber(paginationItemPageNumber)
+                    }
                   >
-                    {paginationItemPageNumber}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+                    <PaginationLink
+                      isActive={itemIsActive}
+                      className={cn(
+                        itemIsEnabled || "pointer-events-none",
+                        paginationIsEnabledOrDefault ||
+                          itemIsActive ||
+                          "select-none",
+                      )}
+                    >
+                      {paginationItemPageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
           </PaginationContent>
         </Pagination>
       </div>

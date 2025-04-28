@@ -2,8 +2,7 @@
 
 import PdfViewer from "@/app/(document)/_components/PdfViewer";
 import PolygonEditor from "@/app/(document)/_components/PolygonEditor";
-import {
-  SideBar,
+import SideBar, {
   SideBarActions,
   SideBarHeader,
 } from "@/app/(document)/_components/SideBar";
@@ -45,18 +44,18 @@ const milliPrecisionJsonReplacer = (key: string, val: unknown) =>
 async function getBoundaryCompletion(
   documentId: string,
   documentRegion: DocumentRegion,
-  partialBoundary: PartialBoundary
+  partialBoundary: PartialBoundary,
 ): Promise<PartialBoundary> {
   const response = await axios.get(`/api/documents/${documentId}/boundaries`, {
     params: {
       pageNumber: documentRegion.pageNumber,
       boundingBox: JSON.stringify(
         documentRegion.normalizedBoundingBox,
-        milliPrecisionJsonReplacer
+        milliPrecisionJsonReplacer,
       ),
       partialBoundary: JSON.stringify(
         partialBoundary.normalizedVertices,
-        milliPrecisionJsonReplacer
+        milliPrecisionJsonReplacer,
       ),
     },
   });
@@ -65,15 +64,13 @@ async function getBoundaryCompletion(
 }
 
 interface NotImplementedConfirmDialogProps {
-  disabled?: boolean;
+  children: React.ReactNode;
 }
 function NotImplementedConfirmDialog(props: NotImplementedConfirmDialogProps) {
-  const { disabled } = props;
+  const { children } = props;
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button disabled={disabled || false}>Confirm</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Not implemented</DialogTitle>
@@ -105,7 +102,7 @@ interface DocumentBoundaryEditorProps {
   backUrl: string;
 }
 export default function DocumentBoundaryEditor(
-  props: DocumentBoundaryEditorProps
+  props: DocumentBoundaryEditorProps,
 ) {
   const { documentId, pdfDocument, documentRegion, backUrl } = props;
   const pdfPage = usePdfDocumentPage(pdfDocument, documentRegion.pageNumber);
@@ -136,51 +133,50 @@ export default function DocumentBoundaryEditor(
     <div className="flex flex-row h-screen">
       <SideBar>
         <SideBarHeader>
-          <p>Step 2: Select boundary</p>
+          <h1>Step 2: Select boundary</h1>
         </SideBarHeader>
         <p>
           Select the geographical boundary contained within the document region.
         </p>
         <div>
-          <div
-            className="border-dashed border-2 border-gray-400 rounded-md aspect-square"
-            onClick={() => {
-              if (vertices.length === 0) {
-                setIsEditing(true);
-              } else {
-                setVertices([]);
-                setIsEditing(false);
-              }
-            }}
-          >
-            <div className="flex flex-row gap-4 justify-center items-center h-full">
-              {vertices.length == 0 ? (
-                isEditing ? (
-                  <>
-                    <p className="font-bold select-none">
-                      Click in the selected region to add vertices
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <SquareMousePointer />
-                    <p className="font-bold select-none">Select boundary</p>
-                  </>
-                )
-              ) : (
-                <>
-                  <Trash />
-                  <p className="font-bold select-none">Clear boundary</p>
-                </>
-              )}
-            </div>
+          <div className="border-dashed border-2 border-gray-400 rounded-md aspect-square">
+            <Button
+              variant="ghost"
+              className="w-full h-full font-bold"
+              size="lg"
+              hidden={vertices.length !== 0}
+              disabled={isEditing}
+              onClick={() => setIsEditing(true)}
+              aria-label="selectBoundary"
+            >
+              <SquareMousePointer aria-hidden />
+              Select boundary
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full h-full font-bold"
+              size="lg"
+              hidden={vertices.length === 0}
+              disabled={isEditing}
+              onClick={() => setVertices([])}
+              aria-label="clearBoundary"
+            >
+              <Trash aria-hidden />
+              Clear boundary
+            </Button>
           </div>
         </div>
         <SideBarActions>
-          <Button asChild>
-            <Link href={backUrl}>Back</Link>
+          <Button variant="outline" asChild>
+            <Link href={backUrl} aria-label="back">
+              Back
+            </Link>
           </Button>
-          <NotImplementedConfirmDialog disabled={vertices.length === 0} />
+          <NotImplementedConfirmDialog>
+            <Button aria-label="confirm" disabled={vertices.length === 0}>
+              Confirm
+            </Button>
+          </NotImplementedConfirmDialog>
         </SideBarActions>
       </SideBar>
       <PdfViewer
@@ -200,7 +196,7 @@ export default function DocumentBoundaryEditor(
                   <SvgBoundingBox
                     value={deNormalizeBoundingBox(
                       documentRegion.normalizedBoundingBox,
-                      pdfPageDimension
+                      pdfPageDimension,
                     )}
                     dimension={pdfPageDimension}
                   />
@@ -210,17 +206,17 @@ export default function DocumentBoundaryEditor(
                   dimension={getPdfPageDimensionInMm(pdfPage)}
                   onInput={(workingVerties: Point[]) => {
                     setNormalizedInputVertices(
-                      normalizePolygon(workingVerties, pdfPageDimension)
+                      normalizePolygon(workingVerties, pdfPageDimension),
                     );
                   }}
-                  updateSuggestedVertices={(suggestedVertices) =>
+                  onUpdateSuggestedVertices={(suggestedVertices) =>
                     setNormalizedSuggestedVertices(
-                      normalizePolygon(suggestedVertices, pdfPageDimension)
+                      normalizePolygon(suggestedVertices, pdfPageDimension),
                     )
                   }
                   suggestedVertices={deNormalizePolygon(
                     normalizedSuggestedVertices,
-                    pdfPageDimension
+                    pdfPageDimension,
                   )}
                   onCancel={() => {
                     if (normalizedInputVertices.length !== 0) {
@@ -247,7 +243,7 @@ export default function DocumentBoundaryEditor(
                   <SvgBoundingBox
                     value={deNormalizeBoundingBox(
                       documentRegion.normalizedBoundingBox,
-                      pdfPageDimension
+                      pdfPageDimension,
                     )}
                     dimension={pdfPageDimension}
                   />

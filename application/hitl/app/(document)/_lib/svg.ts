@@ -1,7 +1,7 @@
 import { Point } from "@/document/core/model";
 
 export function getMouseEventPositionWithinSVGViewBox(
-  e: React.MouseEvent<SVGSVGElement, MouseEvent>
+  e: React.MouseEvent<SVGSVGElement, MouseEvent>,
 ): Point {
   return [
     (e.clientX - e.currentTarget.getBoundingClientRect().left) *

@@ -6,7 +6,7 @@ import { Pool } from "pg";
 import { getVercelFederatedGoogleAuthClient } from "@/clients/google-auth/vercel";
 
 function getUsernameFromServiceAccountEmail(
-  serviceAccountEmail: string
+  serviceAccountEmail: string,
 ): string {
   return serviceAccountEmail.replace(".gserviceaccount.com", "");
 }
@@ -18,7 +18,7 @@ function getCloudSqlConnector(): Connector {
 }
 
 async function getCloudSqlClientOptions(
-  serviceAccountEmail: string
+  serviceAccountEmail: string,
 ): Promise<object> {
   const instanceConnectionName = process.env.GCP_CLOUDSQL_DATABASE_ID;
   if (instanceConnectionName === undefined) {

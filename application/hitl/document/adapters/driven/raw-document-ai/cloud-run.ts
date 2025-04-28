@@ -12,19 +12,19 @@ import { z } from "zod";
 const boundariesDtoSchema = z.array(
   z.object({
     normalized_vertices: z.array(z.tuple([z.number(), z.number()])),
-  })
+  }),
 );
 const partialBoundariesDtoSchema = z.array(
   z.object({
     normalized_vertices: z.array(z.tuple([z.number(), z.number()])),
-  })
+  }),
 );
 
 export default class CloudRunRawDocumentAi implements RawDocumentAi {
   constructor(
     private authClient: GoogleAuth,
     private serviceAccountEmail: string,
-    private serviceUri: string
+    private serviceUri: string,
   ) {}
   private async getIdToken(): Promise<string> {
     const iamCredentialsClient = new IAMCredentialsClient({
@@ -38,7 +38,7 @@ export default class CloudRunRawDocumentAi implements RawDocumentAi {
   }
   async getBoundary(
     rawDocumentId: string,
-    documentRegion: DocumentRegion
+    documentRegion: DocumentRegion,
   ): Promise<Boundary | null> {
     const idToken = await this.getIdToken();
     const url = `${this.serviceUri}/raw-documents/${rawDocumentId}/object-boundaries`;
@@ -49,7 +49,7 @@ export default class CloudRunRawDocumentAi implements RawDocumentAi {
       params: {
         page_number: documentRegion.pageNumber,
         normalized_bounding_box: JSON.stringify(
-          documentRegion.normalizedBoundingBox
+          documentRegion.normalizedBoundingBox,
         ),
       },
     });
@@ -65,7 +65,7 @@ export default class CloudRunRawDocumentAi implements RawDocumentAi {
   async completeBoundary(
     rawDocumentId: string,
     documentRegion: DocumentRegion,
-    partialBoundary: PartialBoundary
+    partialBoundary: PartialBoundary,
   ): Promise<PartialBoundary | null> {
     const idToken = await this.getIdToken();
     const url = `${this.serviceUri}/raw-documents/${rawDocumentId}/object-boundaries`;
@@ -76,10 +76,10 @@ export default class CloudRunRawDocumentAi implements RawDocumentAi {
       params: {
         page_number: documentRegion.pageNumber,
         normalized_bounding_box: JSON.stringify(
-          documentRegion.normalizedBoundingBox
+          documentRegion.normalizedBoundingBox,
         ),
         partial_boundary_normalized_vertices: JSON.stringify(
-          partialBoundary.normalizedVertices
+          partialBoundary.normalizedVertices,
         ),
       },
       paramsSerializer: {
@@ -87,7 +87,7 @@ export default class CloudRunRawDocumentAi implements RawDocumentAi {
       },
     });
     const partialBoundariesDto = partialBoundariesDtoSchema.parse(
-      response.data
+      response.data,
     );
     if (partialBoundariesDto.length > 0) {
       return {

@@ -5,7 +5,7 @@ import { GoogleAuth } from "google-auth-library";
 export default class GcsRawDocumentStorage implements RawDocumentStorage {
   constructor(
     private authClient: GoogleAuth,
-    private bucketName: string
+    private bucketName: string,
   ) {}
 
   async createUrl(id: string): Promise<string | null> {

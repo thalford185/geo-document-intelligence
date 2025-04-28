@@ -1,5 +1,5 @@
-import DocumentLabeller from "@/app/(document)/_components/DocumentLabeller";
 import { getDocumentUseCase } from "@/app/(document)/_init";
+import DocumentLabeller from "@/app/(document)/documents/[documentId]/DocumentLabeller";
 import { notFound } from "next/navigation";
 
 export default async function Page({

@@ -24,7 +24,7 @@ const searchParamsSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ documentId: string }> }
+  { params }: { params: Promise<{ documentId: string }> },
 ) {
   const documentBoundaryUseCase = await getDocumentBoundaryUseCase();
   const { documentId } = await params;
@@ -44,14 +44,15 @@ export async function GET(
     });
     return Response.json(boundary);
   } else {
-    const completedBoundary = await documentBoundaryUseCase.getBoundaryCompletion(
-      documentId,
-      {
-        pageNumber,
-        normalizedBoundingBox,
-      },
-      { normalizedVertices: partialBoundaryNormalizedVertices }
-    );
+    const completedBoundary =
+      await documentBoundaryUseCase.getBoundaryCompletion(
+        documentId,
+        {
+          pageNumber,
+          normalizedBoundingBox,
+        },
+        { normalizedVertices: partialBoundaryNormalizedVertices },
+      );
     return Response.json(completedBoundary);
   }
 }

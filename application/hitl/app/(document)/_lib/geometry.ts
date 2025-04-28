@@ -2,7 +2,7 @@ import { BoundingBox, Dimension, Point } from "@/document/core/model";
 
 export function normalizePolygon(
   polygon: Point[],
-  dimension: Dimension
+  dimension: Dimension,
 ): Point[] {
   return polygon.map((point) => [
     point[0] / dimension.width,
@@ -12,7 +12,7 @@ export function normalizePolygon(
 
 export function deNormalizePolygon(
   polygon: Point[],
-  dimension: Dimension
+  dimension: Dimension,
 ): Point[] {
   return polygon.map((point) => [
     point[0] * dimension.width,
@@ -22,7 +22,7 @@ export function deNormalizePolygon(
 
 export function normalizeBoundingBox(
   boundingBox: BoundingBox,
-  dimension: Dimension
+  dimension: Dimension,
 ): BoundingBox {
   return [
     boundingBox[0] / dimension.width,
@@ -34,7 +34,7 @@ export function normalizeBoundingBox(
 
 export function deNormalizeBoundingBox(
   boundingBox: BoundingBox,
-  dimension: Dimension
+  dimension: Dimension,
 ): BoundingBox {
   return [
     boundingBox[0] * dimension.width,

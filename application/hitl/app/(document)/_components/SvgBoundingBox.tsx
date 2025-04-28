@@ -42,6 +42,7 @@ export default function SvgBoundingBox(props: SvgBoundingBoxProps) {
         height={value[3] - value[1]}
         className="fill-none stroke-blue-900"
         strokeWidth={0.5}
+        data-testid="bounding-box-rect"
       />
     </>
   );

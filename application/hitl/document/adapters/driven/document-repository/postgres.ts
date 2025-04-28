@@ -1,11 +1,11 @@
-import { eq } from "drizzle-orm";
 import { documents as documentsSchema } from "@/clients/drizzle/postgres/schema";
-import DocumentRepository from "@/document/core/ports/driven/document-repository";
 import { Document } from "@/document/core/model";
+import DocumentRepository from "@/document/core/ports/driven/document-repository";
+import { eq } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 function convertFromDbToModel(
-  dbDocument: typeof documentsSchema.$inferSelect
+  dbDocument: typeof documentsSchema.$inferSelect,
 ): Document {
   return {
     id: dbDocument.id,
@@ -14,24 +14,10 @@ function convertFromDbToModel(
   };
 }
 
-function convertToDbModel(
-  document: Document
-): typeof documentsSchema.$inferInsert {
-  return {
-    id: document.id,
-    name: document.name,
-    rawDocumentId: document.rawDocumentId,
-  };
-}
-
 export default class PostgresDocumentRepository implements DocumentRepository {
   constructor(
-    private db: NodePgDatabase<{ documents: typeof documentsSchema }>
+    private db: NodePgDatabase<{ documents: typeof documentsSchema }>,
   ) {}
-  async create(document: Document): Promise<void> {
-    const dbDocument = convertToDbModel(document);
-    await this.db.insert(documentsSchema).values(dbDocument);
-  }
   async getById(documentId: string): Promise<Document | null> {
     const dbDocument = await this.db.query.documents.findFirst({
       where: eq(documentsSchema.id, documentId),

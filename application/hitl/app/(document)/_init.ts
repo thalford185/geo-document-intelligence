@@ -27,16 +27,16 @@ async function getDocumentAiService(): Promise<DocumentAiService> {
   const rawDocumentAi = new CloudRunRawDocumentAi(
     googleAuthClient,
     gcpServiceAccountEmail,
-    aiApiServiceUri
+    aiApiServiceUri,
   );
   const rawDocumentStorage = new GcsRawDocumentStorage(
     googleAuthClient,
-    gcsRawDocumentStorageBucketName
+    gcsRawDocumentStorageBucketName,
   );
   return new DocumentAiService(
     documentRepository,
     rawDocumentAi,
-    rawDocumentStorage
+    rawDocumentStorage,
   );
 }
 

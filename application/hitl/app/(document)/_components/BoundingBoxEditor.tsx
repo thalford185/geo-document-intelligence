@@ -42,8 +42,10 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
     ? getDragSelectBounds(dragSelect)
     : null;
   return (
-    <div className="relative">
+    <div className="relative" role="presentation">
       <svg
+        role="img"
+        aria-label="boundingBoxEditorViewer"
         cursor="crosshair"
         className={`${className || ""}`}
         viewBox={`0 0 ${dimension.width} ${dimension.height}`}
@@ -78,46 +80,58 @@ export default function BoundingBoxEditor(props: BoundingBoxEditorProps) {
             className="fill-none stroke-blue-950"
             strokeDasharray="2,2"
             strokeWidth={0.5}
+            data-testid="drag-select"
           />
         )}
       </svg>
-      <div className="absolute top-8 -left-32 p-8">
-        <div className="bg-white shadow-sm flex flex-col gap-4 p-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => {
-                    setValue(null);
-                    onCancel();
-                  }}
-                >
-                  <CircleSlash />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Cancel bounding box selection</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="default"
-                  size="icon"
-                  disabled={value === null && dragSelect === null}
-                  onClick={() => value !== null && onDone(value)}
-                >
-                  <Check />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Confirm bounding box selection</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+      <div className="absolute top-8 -left-16">
+        <TooltipProvider>
+          <ul
+            role="menubar"
+            className="flex flex-col gap-2 bg-white shadow-sm p-2"
+          >
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    role="menuitem"
+                    aria-label="cancel"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      setValue(null);
+                      onCancel();
+                    }}
+                  >
+                    <CircleSlash aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Cancel bounding box selection</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+            <li role="presentation">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    role="menuitem"
+                    aria-label="done"
+                    variant="default"
+                    size="icon"
+                    disabled={value === null && dragSelect === null}
+                    onClick={() => value !== null && onDone(value)}
+                  >
+                    <Check aria-hidden />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Confirm bounding box selection</p>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+          </ul>
+        </TooltipProvider>
       </div>
     </div>
   );

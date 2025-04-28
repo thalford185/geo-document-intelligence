@@ -2,29 +2,38 @@ import { serializeSvgPolygonPoints } from "@/app/(document)/_lib/svg";
 import { cn } from "@/app/(document)/_lib/utils";
 import { Point } from "@/document/core/model";
 
+type Color = "fuchsia" | "blue";
+
+const colorFillClassName: Record<Color, string> = {
+  blue: "fill-blue-900",
+  fuchsia: "fill-fuchsia-900",
+};
+const colorStrokeClassName: Record<Color, string> = {
+  blue: "stroke-blue-900",
+  fuchsia: "stroke-fuchsia-900",
+};
+
 interface SvgPolygonProps {
   vertices: Point[];
-  strokeDash?: [number, number];
-  color?: "fuchsia" | "blue";
+  color?: Color;
   filled?: boolean;
+  dashed?: boolean;
 }
 export default function SvgPolygon(props: SvgPolygonProps) {
-  const { vertices, strokeDash, color, filled } = props;
+  const { vertices, color, filled, dashed } = props;
   const colorOrDefault = color || "blue";
-  const filledOrDefault = filled || true;
-  const strokeDasharray =
-    strokeDash === undefined ? undefined : `${strokeDash[0]} ${strokeDash[1]}`;
   return (
     <>
       <polyline
         points={serializeSvgPolygonPoints(vertices)}
         className={cn(
-          filledOrDefault ? (colorOrDefault === "fuchsia" ? "fill-fuchsia-900" : "fill-blue-900") : "fill-none",
-          colorOrDefault === "fuchsia" ? "stroke-fuchsia-900" : "stroke-blue-900"
+          (filled ?? true) ? colorFillClassName[colorOrDefault] : "fill-none",
+          colorStrokeClassName[colorOrDefault],
         )}
         fillOpacity="0.1"
         strokeWidth="2"
-        strokeDasharray={strokeDasharray}
+        strokeDasharray={(dashed ?? false) ? "2 2" : undefined}
+        data-testid="polygon-polyline"
       />
       {vertices.map(([x, y], i) => (
         <circle
@@ -32,7 +41,8 @@ export default function SvgPolygon(props: SvgPolygonProps) {
           cx={x}
           cy={y}
           r="2"
-          className={colorOrDefault === "fuchsia" ? "fill-fuchsia-900" : "fill-blue-900"}
+          className={colorFillClassName[colorOrDefault]}
+          data-testid="polygon-circle"
         />
       ))}
     </>
