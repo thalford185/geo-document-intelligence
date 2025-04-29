@@ -12,13 +12,16 @@ from geo_document_intelligence.ai.raw_document.core.ports.driven.raw_document_st
     RawDocumentStorageNotFoundError,
 )
 
+DEFAULT_DPI = 72
+
 
 class GcsRawDocumentStorageNotFoundError(RawDocumentStorageNotFoundError): ...
 
 
 class GcsRawDocumentStorage(RawDocumentStorage):
-    def __init__(self, bucket: Bucket):
+    def __init__(self, bucket: Bucket, dpi: int = DEFAULT_DPI):
         self._bucket = bucket
+        self._dpi = dpi
 
     async def get_by_document_id(self, document_id: str) -> list[Raster]:
         """
@@ -31,6 +34,7 @@ class GcsRawDocumentStorage(RawDocumentStorage):
                 f"Raw document {document_id} at path {path} not found"
             )
         page_rasters = [
-            np.array(image) for image in convert_from_bytes(blob.download_as_bytes())
+            np.array(image)
+            for image in convert_from_bytes(blob.download_as_bytes(), dpi=self._dpi)
         ]
         return page_rasters
