@@ -24,7 +24,7 @@ spec:
             value: "$GCS_RAW_DOCUMENTS_BUCKET_NAME"
         resources:
           limits:
-            cpu: '2'
+            cpu: '4'
             memory: 8Gi
   traffic:
     - percent: 100
