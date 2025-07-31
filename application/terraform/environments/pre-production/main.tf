@@ -24,7 +24,7 @@ module "shared" {
   source                             = "../../modules/shared"
   raw_documents_bucket_name          = "geo-document-intelligence-pre"
   raw_documents_bucket_cors_origin   = ["*"]
-  raw_documents_bucket_force_destroy = false
+  raw_documents_bucket_force_destroy = true
 }
 
 module "ai_api" {
@@ -46,5 +46,5 @@ module "hitl_app" {
   // protection for pre-production environments is a premium feature
   vercel_environments    = ["development", "preview", "production"]
   db_tier                = "db-g1-small"
-  db_deletion_protection = true
+  db_deletion_protection = false
 }

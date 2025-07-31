@@ -29,6 +29,7 @@ jobs:
       gcp_workload_identity_provider_id: projects/505462349330/locations/global/workloadIdentityPools/ci-cd/providers/ci-cd-github-actions
     secrets:
       vercel_api_token: ${{secrets.VERCEL_API_TOKEN}}
+    if: false
 
   deploy_pre_production_application:
     uses: ./.github/workflows/deploy-application-ai.yml
@@ -47,3 +48,4 @@ jobs:
       gcs_raw_documents_bucket_name: geo-document-intelligence-pre
       cloudrun_min_instances: 1
       cloudrun_max_instances: 1
+    if: false
